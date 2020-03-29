@@ -1,0 +1,97 @@
+<?php
+class Login_model extends CI_Model{
+
+  //login
+  function validate($email,$password){
+    $this->db->where('mel_client',$email);
+    $this->db->where('mdp_client',$password);
+    $result = $this->db->get('client',1);
+    return $result;
+  }
+
+  //mdp
+  public function get_user($id)
+    {
+        $this->db->where('id_client', $id);
+        $query = $this->db->get('client');
+        return $query->row();
+    }
+
+  public function update_user($id, $userdata)
+  {
+        $this->db->where('id_client', $id);
+        $this->db->update('client', $userdata);
+  }
+
+  //Réservation
+  function saverecords($id){
+        $data = array(
+            'pension_reservation' => $this->input->post('pension_reservation'),
+            'datedebut_reservation' => $this->input->post('datedebut_reservation'),
+            'datefin_reservation' => $this->input->post('datefin_reservation'),
+            'nbpersonne_reservation' => $this->input->post('nbpersonne_reservation'),
+            'menage_reservation' => $this->input->post('menage_reservation'),
+            'id_client' => $id
+  );
+  return $this->db->insert('reservation', $data);
+  }
+    
+  function getShow($id){
+       $this->db->select("*");
+       $this->db->from('reservation');
+       $this->db->where('id_client', $id);
+       $query = $this->db->get();
+       return $query->result();
+  }
+    
+
+  function getShowAdmin(){
+      $this->db->select("*");
+      $this->db->from('reservation');
+      $query = $this->db->get();
+      return $query->result();
+   }
+    
+  function deleterecords($id){
+                
+        $this->db->where('id_reservation', $id);
+        $this->db->delete('reservation');       
+  }
+
+  function update($id){
+      $data = array(
+            'pension_reservation' => $this->input->post('pension_reservation'),
+            'datedebut_reservation' => $this->input->post('datedebut_reservation'),
+            'datefin_reservation' => $this->input->post('datefin_reservation'),
+            'nbpersonne_reservation' => $this->input->post('nbpersonne_reservation'),
+            'menage_reservation' => $this->input->post('menage_reservation'),
+      );         
+      $this->db->where('id_reservation', $id);
+      return $this->db->update('reservation', $data);       
+  }
+
+  //Gérer les utilisateurs
+  function getShowClient(){
+        $this->db->select("*");
+        $this->db->from('client');
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
+  function deleterecordsClient($id){
+                
+        $this->db->where('id_client', $id);
+        $this->db->delete('client');       
+  }
+
+  function updateclient($id){
+      $data = array(
+            'nom_client' => $this->input->post('nom_client'),
+            'prenom_client' => $this->input->post('prenom_client'),
+            'cp_client' => $this->input->post('cp_client'),
+            'adresse_client' => $this->input->post('adresse_client'),
+      );         
+      $this->db->where('id_client', $id);
+      return $this->db->updateclient('client', $data);       
+  }
+}
